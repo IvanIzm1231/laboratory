@@ -1,39 +1,37 @@
-let xPos = 420; // начальная позиция персонажа по оси X
-let yPos = 340; // начальная позиция персонажа по оси Y
+let xPos = 420; 
+let yPos = 340; 
 let isMovingRight = false;
 let isMovingLeft = false;
 let isJumping = false;
 let jumpSpeed = 0;
 let gravity = 1;
-let facingRight = true; // направление, в котором смотрит персонаж
-let bird; // переменная для птицы
-let canyons = []; // массив каньонов
-let character; // персонаж и птица
+let facingRight = true; 
+let bird; 
+let canyons = []; 
+let character; 
 
-
-// Класс для персонажа
 class Character {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = 60; // ширина тела
-        this.height = 70; // высота тела
-        this.handLength = 50; // длина рук
-        this.legLength = 50; // длина ног
+        this.width = 60; 
+        this.height = 70; 
+        this.handLength = 50; 
+        this.legLength = 50; 
     }
 
     move() {
         let newX = this.x;
         if (isMovingRight) {
-            newX += 5; // движение вправо
-            facingRight = true; // поворот вправо
+            newX += 5; 
+            facingRight = true; 
         }
         if (isMovingLeft) {
-            newX -= 5; // движение влево
-            facingRight = false; // поворот влево
+            newX -= 5; 
+            facingRight = false;
         }
 
-        // Ограничение по X в пределах холста
+        
         this.x = constrain(newX, 0, width - this.width);
     }
 
@@ -51,60 +49,60 @@ class Character {
     }
 
     display() {
-        // Поворот персонажа
+      
         push();
-        translate(this.x + this.width / 2, this.y + this.height / 2); // центр поворота
+        translate(this.x + this.width / 2, this.y + this.height / 2); 
         if (facingRight) {
-            scale(-1, 1); // перевернуть
+            scale(-1, 1);
         }
 
-        // Отрисовка тела
-        fill(0, 102, 204); // цвет одежды
-        rect(-this.width / 2, -this.height / 2, this.width, this.height); // тело
+       
+        fill(0, 102, 204); 
+        rect(-this.width / 2, -this.height / 2, this.width, this.height); 
 
-        // Отрисовка головы
-        fill(255, 224, 189); // цвет кожи
-        rect(-this.width / 2 + 5, -this.height / 2 - 50, this.width - 10, 50); // голова
+        
+        fill(255, 224, 189); 
+        rect(-this.width / 2 + 5, -this.height / 2 - 50, this.width - 10, 50);
 
-        this.displayLegs(); // отображаем ноги
-        this.displayArms(); // отображаем руки
+        this.displayLegs();
+        this.displayArms();
 
-        // Отрисовка глаз
-        fill(0); // цвет глаз
+        
+        fill(0);
         if (facingRight) {
-            ellipse(-this.width / 2 + 10, -this.height / 2 - 35, 5, 5); // левый глаз
-            ellipse(-this.width / 2 + 30, -this.height / 2 - 35, 5, 5); // правый глаз
+            ellipse(-this.width / 2 + 10, -this.height / 2 - 35, 5, 5); 
+            ellipse(-this.width / 2 + 30, -this.height / 2 - 35, 5, 5); 
         } else {
-            ellipse(-this.width / 2 + 30, -this.height / 2 - 35, 5, 5); // левый глаз
-            ellipse(-this.width / 2 + 10, -this.height / 2 - 35, 5, 5); // правый глаз
+            ellipse(-this.width / 2 + 30, -this.height / 2 - 35, 5, 5); 
+            ellipse(-this.width / 2 + 10, -this.height / 2 - 35, 5, 5); 
         }
 
-        pop(); // восстановить состояние
+        pop();
     }
 
     displayLegs() {
         stroke("#000000");
         strokeWeight(2);
-        fill(0, 102, 204); // цвет ног
-        let legOffset = isJumping ? -10 : 0; // смещение ног при прыжке
+        fill(0, 102, 204); 
+        let legOffset = isJumping ? -10 : 0; 
         
-        // Отрисовка ног
-        line(-this.width / 2, this.height / 2, -this.width / 2 - 10, this.height / 2 + this.legLength + legOffset); // левая нога
-        line(this.width / 2, this.height / 2, this.width / 2 + 10, this.height / 2 + this.legLength + legOffset); // правая нога
+        
+        line(-this.width / 2, this.height / 2, -this.width / 2 - 10, this.height / 2 + this.legLength + legOffset); 
+        line(this.width / 2, this.height / 2, this.width / 2 + 10, this.height / 2 + this.legLength + legOffset); 
     }
 
     displayArms() {
         stroke("#000000");
         strokeWeight(2);
-        fill(0, 102, 204); // цвет рук
-        let armSwing = isMovingRight || isMovingLeft ? 5 : 0; // легкое движение рук при движении
+        fill(0, 102, 204); 
+        let armSwing = isMovingRight || isMovingLeft ? 5 : 0; 
         
         // Отрисовка рук
-        line(-this.width / 2, -this.height / 2 + 10, -this.handLength - armSwing, -this.height / 2 + 20); // левая рука
-        line(this.width / 2, -this.height / 2 + 10, this.handLength + armSwing, -this.height / 2 + 20); // правая рука
+        line(-this.width / 2, -this.height / 2 + 10, -this.handLength - armSwing, -this.height / 2 + 20); 
+        line(this.width / 2, -this.height / 2 + 10, this.handLength + armSwing, -this.height / 2 + 20); 
     }
 }
-// Класс для каньона
+
 class Canyon {
     constructor(x, y, width, height) {
         this.x = x + 300;
@@ -113,26 +111,26 @@ class Canyon {
         this.height = height + 80;
     }
  display() {
-        fill(0, 0, 0); // цвет каньона
+        fill(0, 0, 0);
         rect(this.x, this.y, this.width, this.height);
     }
 
     checkCollision(character) {
         if (character.y + character.height > this.y && character.x + character.width > this.x && character.x < this.x + this.width) {
-            // Если персонаж упал в каньон
-            isFalling = true; // включаем состояние падения
-            character.y = this.y + this.height; // помещаем персонажа в каньон
+            
+            isFalling = true; 
+            character.y = this.y + this.height; 
         }
     }
 }
-// Класс для птицы
+
 class Bird {
     constructor(x, y) {
         this.x = x;
         this.y = y;
         this.speed = random(1, 3);
-        this.direction = random([-1, 1]); // -1 или 1 для движения влево или вправо
-        this.isFalling = false; // состояние птицы
+        this.direction = random([-1, 1]); 
+        this.isFalling = false; 
     }
 
     move() {
@@ -141,65 +139,61 @@ class Bird {
 
             // Проверка на границы
             if (this.x < 0 || this.x > width) {
-                this.direction *= -1; // поменять направление
+                this.direction *= -1; 
             }
 
-            // Птица немного изменяет свою позицию по Y для более естественного движения
+           
             this.y += random(-0.2, 0.2);
-            this.y = constrain(this.y, 50, height - 50); // ограничение по Y
+            this.y = constrain(this.y, 50, height - 50); 
         } else {
             // Птица падает
-            this.y += 5; // скорость падения
-            this.y = constrain(this.y, 432, height - 30); // фиксируем на уровне земли
+            this.y += 5; 
+            this.y = constrain(this.y, 432, height - 30); 
         }
     }
     display() {
-        // Отрисовка тела птицы
-        fill(0); // черный цвет для тела
-        rect(this.x, this.y, 30, 30); // тело птицы
+       
+        fill(0); 
+        rect(this.x, this.y, 30, 30);
 
-        // Отрисовка клюва
-        fill(255, 255, 0); // желтый цвет для клюва
+        
+        fill(255, 255, 0);
         if (this.direction > 0) {
-            // Если летит вправо
-            triangle(this.x + 30, this.y + 10, this.x + 30, this.y + 20, this.x + 40, this.y + 15); // клюв
+            
+            triangle(this.x + 30, this.y + 10, this.x + 30, this.y + 20, this.x + 40, this.y + 15); 
         } else {
-            // Если летит влево
-            triangle(this.x, this.y + 10, this.x, this.y + 20, this.x - 10, this.y + 15); // клюв
+            
+            triangle(this.x, this.y + 10, this.x, this.y + 20, this.x - 10, this.y + 15); 
         }
 
-        // Если птица падает, клюв будет направлен вниз
+        
         if (this.isFalling) {
-            fill(255, 255, 0); // желтый цвет для клюва
+            fill(255, 255, 0); 
             if (this.direction > 0) {
-                triangle(this.x + 10, this.y + 30, this.x + 20, this.y + 40, this.x + 10, this.y + 40); // клюв вниз вправо
+                triangle(this.x + 10, this.y + 30, this.x + 20, this.y + 40, this.x + 10, this.y + 40);
             } else {
-                triangle(this.x + 20, this.y + 30, this.x + 10, this.y + 40, this.x + 20, this.y + 40); // клюв вниз влево
+                triangle(this.x + 20, this.y + 30, this.x + 10, this.y + 40, this.x + 20, this.y + 40); 
             }
         }
     }
 
     fall() {
-        this.isFalling = true; // активируем состояние падения
+        this.isFalling = true; 
     }
 }
-// Переменные для персонажа и птицы
-
 
 function setup() {
     createCanvas(1050, 550);
-    character = new Character(xPos, yPos); // создание персонажа
-    bird = new Bird(random(width), random(50, 200)); // создание птицы
+    character = new Character(xPos, yPos); 
+    bird = new Bird(random(width), random(50, 200));
     canyons.push(new Canyon(300, 500, 150, 50));
 }
 
 function draw() {
-    background(122, 160, 260); //небо
+    background(122, 160, 260);
 
-    //земля
     drawGround();
 
-    // Объекты окружающей среды
     drawEnvironment(); 
 
         for (let canyon of canyons) {
@@ -207,12 +201,10 @@ function draw() {
         canyon.checkCollision(character);
     }
     
-    // Обновление ерсонажа
     character.move();
     character.jump();
     character.display();
 
-    // Обновляем и отображаем птицу
     bird.move();
     bird.display();
     
@@ -222,15 +214,15 @@ function draw() {
 function drawGround() {
     noStroke();
     fill(0, 155, 0);
-    rect(0, 432, width, 118); // земля
+    rect(0, 432, width, 118);
 }
 
 function drawEnvironment() {
     noStroke();
     fill(255);
-    ellipse(600, 190, 90, 75); // облако 1
-    ellipse(650, 210, 75, 55); // облако 2
-    ellipse(550, 210, 75, 55); // облако 3
+    ellipse(600, 190, 90, 75);
+    ellipse(650, 210, 75, 55); 
+    ellipse(550, 210, 75, 55); 
 
     noStroke();
     fill(90);
@@ -239,34 +231,34 @@ function drawEnvironment() {
     triangle(180, 432, 290, 100, 380, 432); // гора 2
 
     noStroke();
-    fill(218, 165, 32); // цвет солнца
-    ellipse(100, 150, 120, 120); // солнце
+    fill(218, 165, 32);
+    ellipse(100, 150, 120, 120);
 }
 
 function keyPressed() {
     if (keyCode === 68) { 
-        isMovingRight = true; // движение вправо
+        isMovingRight = true;
     }
     if (keyCode === 65) {
-        isMovingLeft = true; // движение влево
+        isMovingLeft = true;
     }
     if (keyCode === 32) {
         if (!isJumping) {
             // прыжок
             isJumping = true;
-            jumpSpeed = 15; // начальная скорость прыжка
+            jumpSpeed = 15;
         }
     }
     if (keyCode === 70) { 
-        bird.fall(); // заставляем птицу падать
+        bird.fall();
     }
 }
 
 function keyReleased() {
     if (keyCode === 68) { 
-        isMovingRight = false; // остановка движения вправо
+        isMovingRight = false;
     }
     if (keyCode === 65) {
-        isMovingLeft = false; // остановка движения влево
+        isMovingLeft = false; 
     }
 }
