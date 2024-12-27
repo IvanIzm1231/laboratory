@@ -7,8 +7,7 @@ let jumpSpeed = 0;
 let gravity = 1;
 let facingRight = true; // направление, в котором смотрит персонаж
 let bird; // переменная для птицы
-let countCanyons = 2;
-let canyons = [];
+let canyons = []; // массив каньонов
 let character; // персонаж и птица
 
 
@@ -105,7 +104,27 @@ class Character {
         line(this.width / 2, -this.height / 2 + 10, this.handLength + armSwing, -this.height / 2 + 20); // правая рука
     }
 }
+// Класс для каньона
+class Canyon {
+    constructor(x, y, width, height) {
+        this.x = x + 300;
+        this.y = y - 80;
+        this.width = width ;
+        this.height = height + 80;
+    }
+ display() {
+        fill(0, 0, 0); // цвет каньона
+        rect(this.x, this.y, this.width, this.height);
+    }
 
+    checkCollision(character) {
+        if (character.y + character.height > this.y && character.x + character.width > this.x && character.x < this.x + this.width) {
+            // Если персонаж упал в каньон
+            isFalling = true; // включаем состояние падения
+            character.y = this.y + this.height; // помещаем персонажа в каньон
+        }
+    }
+}
 // Класс для птицы
 class Bird {
     constructor(x, y) {
@@ -171,6 +190,7 @@ function setup() {
     createCanvas(1050, 550);
     character = new Character(xPos, yPos); // создание персонажа
     bird = new Bird(random(width), random(50, 200)); // создание птицы
+    canyons.push(new Canyon(300, 500, 150, 50));
 }
 
 function draw() {
@@ -182,6 +202,11 @@ function draw() {
     // Объекты окружающей среды
     drawEnvironment(); 
 
+        for (let canyon of canyons) {
+        canyon.display();
+        canyon.checkCollision(character);
+    }
+    
     // Обновление ерсонажа
     character.move();
     character.jump();
@@ -190,6 +215,8 @@ function draw() {
     // Обновляем и отображаем птицу
     bird.move();
     bird.display();
+    
+
 }
 
 function drawGround() {
@@ -243,5 +270,3 @@ function keyReleased() {
         isMovingLeft = false; // остановка движения влево
     }
 }
-
-
