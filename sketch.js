@@ -1,5 +1,3 @@
-
-
 let xPos = 420; // начальная позиция персонажа по оси X
 let yPos = 340; // начальная позиция персонажа по оси Y
 let isMovingRight = false;
@@ -9,6 +7,9 @@ let jumpSpeed = 0;
 let gravity = 1;
 let facingRight = true; // направление, в котором смотрит персонаж
 let bird; // переменная для птицы
+let countCanyons = 2;
+let canyons = [];
+let character; // персонаж и птица
 
 
 // Класс для персонажа
@@ -133,7 +134,6 @@ class Bird {
             this.y = constrain(this.y, 432, height - 30); // фиксируем на уровне земли
         }
     }
-
     display() {
         // Отрисовка тела птицы
         fill(0); // черный цвет для тела
@@ -164,9 +164,8 @@ class Bird {
         this.isFalling = true; // активируем состояние падения
     }
 }
-
 // Переменные для персонажа и птицы
-let character;
+
 
 function setup() {
     createCanvas(1050, 550);
@@ -175,15 +174,15 @@ function setup() {
 }
 
 function draw() {
-    background(122, 160, 260); // заполнить небо голубым
+    background(122, 160, 260); //небо
 
-    // Рисуем землю
+    //земля
     drawGround();
 
     // Объекты окружающей среды
     drawEnvironment(); 
 
-    // Обновляем и отображаем персонажа
+    // Обновление ерсонажа
     character.move();
     character.jump();
     character.display();
@@ -196,7 +195,7 @@ function draw() {
 function drawGround() {
     noStroke();
     fill(0, 155, 0);
-    rect(0, 432, width, 118); // нарисовать зеленую землю
+    rect(0, 432, width, 118); // земля
 }
 
 function drawEnvironment() {
@@ -218,42 +217,31 @@ function drawEnvironment() {
 }
 
 function keyPressed() {
-    if (key === "d") {
+    if (keyCode === 68) { 
         isMovingRight = true; // движение вправо
     }
-    if (key === "a") {
+    if (keyCode === 65) {
         isMovingLeft = true; // движение влево
     }
-    if (key === " ") {
+    if (keyCode === 32) {
         if (!isJumping) {
             // прыжок
             isJumping = true;
             jumpSpeed = 15; // начальная скорость прыжка
         }
     }
-    if (key === "f") {
-        // нажатие кнопки F
+    if (keyCode === 70) { 
         bird.fall(); // заставляем птицу падать
     }
 }
 
 function keyReleased() {
-    if (key === "d") {
+    if (keyCode === 68) { 
         isMovingRight = false; // остановка движения вправо
     }
-    if (key === "a") {
+    if (keyCode === 65) {
         isMovingLeft = false; // остановка движения влево
     }
 }
 
-// Функция для проверки коллизий
-function isColliding(newX, newY) {
-    // Проверка коллизий с облаками и горами
-    if (
-        (newY < 200 && newX < 500 && newX + 40 > 580) || // облака
-        (newY < 100 && newX < 250 && newX + 40 > 350) // гора
-    ) {
-        return true; // есть коллизия
-    }
-    return false; // коллизий нет
-}
+
